@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
+import { usePathname, useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -13,13 +14,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { updateUser } from '@/lib/actions/user.actions'
 import { useUploadThing } from '@/lib/uploadthing'
 import { isBase64Image } from '@/lib/utils'
 import { UserValidation } from '@/lib/validations/user'
-
-import { Textarea } from '../ui/textarea'
 
 interface AccountProfileProps {
   user: {
@@ -30,10 +32,11 @@ interface AccountProfileProps {
     bio: string
     image: string
   }
-  btnTitle: string
 }
 
-export function AccountProfile({ user, btnTitle }: AccountProfileProps) {
+export function AccountProfile({ user }: AccountProfileProps) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [files, setFiles] = useState<File[]>([])
   const { startUpload } = useUploadThing('media')
 
@@ -85,7 +88,20 @@ export function AccountProfile({ user, btnTitle }: AccountProfileProps) {
       }
     }
 
-    // TODO: Update user profile
+    await updateUser({
+      userId: user.id,
+      username: values.username,
+      name: values.name,
+      bio: values.bio,
+      image: values.profile_photo,
+      path: pathname,
+    })
+
+    if (pathname === '/profile/edit') {
+      router.back()
+    } else {
+      router.push('/')
+    }
   }
 
   return (
@@ -147,6 +163,7 @@ export function AccountProfile({ user, btnTitle }: AccountProfileProps) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -166,6 +183,7 @@ export function AccountProfile({ user, btnTitle }: AccountProfileProps) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -185,12 +203,13 @@ export function AccountProfile({ user, btnTitle }: AccountProfileProps) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
 
         <Button type="submit" className="bg-primary-500">
-          Submit
+          Continue
         </Button>
       </form>
     </Form>
