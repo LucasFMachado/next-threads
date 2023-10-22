@@ -30,9 +30,9 @@ export async function updateUser({
       { id: userId },
       {
         username: username.toLowerCase(),
-        name: name,
-        bio: bio,
-        image: image,
+        name,
+        bio,
+        image,
         onboarded: true,
       },
       { upsert: true },
