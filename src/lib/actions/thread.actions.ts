@@ -118,3 +118,44 @@ export async function fetchThread(id: string) {
     throw new Error(`Failed to fetch thread: ${error.message}`)
   }
 }
+
+interface CreateCommentParams {
+  threadId: string
+  userId: string
+  text: string
+  path: string
+}
+
+export async function createComment({
+  threadId,
+  userId,
+  text,
+  path,
+}: CreateCommentParams) {
+  try {
+    connectToDB()
+
+    const originalThread = await Thread.findById(threadId)
+
+    if (!originalThread) {
+      throw new Error('Thread not found.')
+    }
+
+    const commentThread = new Thread({
+      text,
+      author: userId,
+      parentId: threadId,
+    })
+
+    const savedCommentThread = await commentThread.save()
+
+    originalThread.children.push(savedCommentThread._id)
+
+    await originalThread.save()
+
+    revalidatePath(path)
+  } catch (error: any) {
+    console.error(error)
+    throw new Error(`Failed to create a comment: ${error.message}`)
+  }
+}

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { PostThread } from '@/components/forms/PostThread'
 import { fetchUser } from '@/lib/actions/user.actions'
 
-export default async function Home() {
+export default async function CreateThreadPage() {
   const user = await currentUser()
 
   if (!user) {
@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <>
       <h1 className="head-text">Create thread</h1>
-      <PostThread userId={userInfo._id} />
+      <PostThread userId={String(userInfo._id)} />
     </>
   )
 }
