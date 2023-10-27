@@ -12,8 +12,8 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({
-  accountId,
-  authUserId,
+  // accountId, // TODO
+  // authUserId, // TODO
   name,
   username,
   imageUrl,

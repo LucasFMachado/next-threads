@@ -17,8 +17,7 @@ export function UserCard({
   id,
   name,
   username,
-  imageUrl,
-  userType,
+  imageUrl, // userType, // TODO
 }: UserCardProps) {
   const router = useRouter()
 

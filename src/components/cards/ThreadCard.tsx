@@ -27,12 +27,12 @@ interface ThreadCardProps {
 
 export function ThreadCard({
   id,
-  currentUserId,
-  parentId,
+  // currentUserId, // TODO
+  // parentId, // TODO
   content,
   author,
-  community,
-  createdAt,
+  // community, // TODO
+  // createdAt, // TODO
   comments,
   isComment,
 }: ThreadCardProps) {
